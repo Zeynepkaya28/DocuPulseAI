@@ -1,0 +1,119 @@
+@import "../styles/tokens.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    font-family: var(--font-sans); /* // HIG: typography — system font, no font files */
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    background: var(--system-background);
+    color: var(--label);
+    font: var(--t-body);
+    -webkit-font-smoothing: antialiased;
+  }
+  code,
+  pre,
+  kbd {
+    font-family: var(--font-mono); /* // HIG: typography */
+  }
+  /* Visible focus ring everywhere; keyboard-only flows must work. // HIG: accessibility */
+  :focus-visible {
+    outline: 3px solid rgb(var(--accent) / 0.65);
+    outline-offset: 2px;
+    border-radius: 6px;
+  }
+  ::placeholder {
+    color: var(--placeholder-text);
+  }
+  a {
+    color: var(--link);
+  }
+}
+
+@layer components {
+  /* Text styles. Line heights come from the HIG tables; no tight leading for 3+ lines. // HIG: typography */
+  .t-largeTitle { font: var(--t-largeTitle); }
+  .t-title1 { font: var(--t-title1); }
+  .t-title2 { font: var(--t-title2); }
+  .t-title3 { font: var(--t-title3); }
+  .t-headline { font: var(--t-headline); }
+  .t-body { font: var(--t-body); }
+  .t-callout { font: var(--t-callout); }
+  .t-subheadline { font: var(--t-subheadline); }
+  .t-footnote { font: var(--t-footnote); }
+  .t-caption1 { font: var(--t-caption1); }
+  .t-caption2 { font: var(--t-caption2); }
+  .t-emphasized { font-weight: var(--w-emphasized); }
+
+  /* Control layer glass. Only sidebar, toolbar, tab bar, popover. // HIG: materials */
+  .glass {
+    background: var(--glass-regular-bg);
+    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+    backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--glass-shadow);
+  }
+  .glass-clear {
+    background: var(--glass-clear-bg);
+  }
+
+  /* Content materials. // HIG: materials */
+  .material-ultrathin { background: var(--material-ultrathin); backdrop-filter: blur(8px); }
+  .material-thin { background: var(--material-thin); backdrop-filter: blur(12px); }
+  .material-regular { background: var(--material-regular); backdrop-filter: blur(20px); }
+  .material-thick { background: var(--material-thick); backdrop-filter: blur(28px); }
+
+  /* Scroll edge effect instead of a solid bar behind controls. // HIG: layout, toolbars */
+  .scroll-edge-top {
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 var(--toolbar-height));
+    mask-image: linear-gradient(to bottom, transparent 0, #000 var(--toolbar-height));
+  }
+
+  .hit {
+    min-width: var(--hit);
+    min-height: var(--hit);
+  }
+
+  .sr-only-focusable:not(:focus) {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+  }
+}
+
+/* Reduced motion: zoom/scale/slide become fades; no blur animations. // HIG: accessibility */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+  }
+  .motion-transform {
+    transform: none !important;
+    transition-property: opacity !important;
+  }
+}
+
+@keyframes dp-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes dp-shrink-out {
+  from { opacity: 1; transform: scale(1); }
+  to { opacity: 0; transform: scale(0.6); }
+}
+@keyframes dp-spin {
+  to { transform: rotate(360deg); }
+}
+@keyframes dp-indeterminate {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(250%); }
+}

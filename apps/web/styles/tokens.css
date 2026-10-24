@@ -1,0 +1,410 @@
+/*
+ * DocuPulse AI — design tokens (Faz A0)
+ *
+ * The ONLY place raw color values live. Components use semantic tokens only.
+ * HIG says not to hard-code system color values because they change between
+ * releases; on the web there is no system API, so they are kept here, in one file. // HIG: color
+ *
+ * Color triplets are "R G B" so Tailwind can add alpha: rgb(var(--c-blue) / 0.5).
+ */
+
+/* ───────────────────────── 1. LIGHT (default) ───────────────────────── */
+:root {
+  color-scheme: light dark;
+
+  /* System colors — light. // HIG: color */
+  --c-red: 255 56 60;
+  --c-orange: 255 141 40;
+  --c-yellow: 255 204 0;
+  --c-green: 52 199 89;
+  --c-mint: 0 200 179;
+  --c-teal: 0 195 208;
+  --c-cyan: 0 192 232;
+  --c-blue: 0 136 255;
+  --c-indigo: 97 85 245;
+  --c-purple: 203 48 224;
+  --c-pink: 255 45 85;
+  --c-brown: 172 127 94;
+  --c-gray: 142 142 147;
+
+  /*
+   * Foreground variants: the system color when used as an icon or text on a light
+   * background. Light mode borrows the increased-contrast value so icons reach 3:1
+   * and text reaches 4.5:1. // HIG: accessibility (contrast), color
+   */
+  --fg-red: 233 21 45;
+  --fg-orange: 197 83 0;
+  --fg-yellow: 161 106 0;
+  --fg-green: 0 137 50;
+  --fg-blue: 30 110 244;
+  --fg-gray: 108 108 112;
+
+  /* Accent (tint) = blue. A brand color can replace it here. // HIG: color "Tint and accent" */
+  --accent: var(--c-blue);
+  /* Filled control with white label. Plain blue gives 3.5:1 with white, so a darker step is used. // HIG: accessibility */
+  --accent-fill: 30 110 244;
+  --on-accent: 255 255 255;
+  --link: rgb(30 110 244); /* // HIG: color "link" */
+
+  /* One meaning per color. // HIG: color — status is never color alone: icon + text too. // HIG: accessibility */
+  --status-processing: var(--fg-blue);
+  --status-done: var(--fg-green);
+  --status-warning: var(--fg-orange);
+  --status-error: var(--fg-red);
+
+  /* Dynamic (semantic) colors. // HIG: color "Dynamic system colors" */
+  --label: rgb(0 0 0);
+  /* Apple uses 0.6 alpha; raised to 0.75 so footnote-size text passes 4.5:1 on grouped backgrounds. // HIG: accessibility */
+  --secondary-label: rgb(60 60 67 / 0.75);
+  --tertiary-label: rgb(60 60 67 / 0.45);
+  --quaternary-label: rgb(60 60 67 / 0.18);
+  --placeholder-text: rgb(60 60 67 / 0.55);
+  --separator: rgb(60 60 67 / 0.29);
+  --opaque-separator: rgb(198 198 200);
+  --system-background: rgb(255 255 255);
+  --secondary-system-background: rgb(242 242 247);
+  --tertiary-system-background: rgb(255 255 255);
+  --system-grouped-background: rgb(242 242 247);
+  --secondary-system-grouped-background: rgb(255 255 255);
+  --tertiary-system-grouped-background: rgb(242 242 247);
+  --system-fill: rgb(120 120 128 / 0.2);
+  --secondary-system-fill: rgb(120 120 128 / 0.16);
+  --tertiary-system-fill: rgb(118 118 128 / 0.12);
+
+  /* Materials. // HIG: materials */
+  /* Control layer — Liquid Glass approximation. "regular" is the default variant. */
+  --glass-regular-bg: rgb(250 250 252 / 0.72);
+  --glass-clear-bg: rgb(255 255 255 / 0.22);
+  --glass-dim: rgb(0 0 0 / 0.35); /* 35% dimming under "clear" when content is bright. // HIG: materials */
+  --glass-border: rgb(255 255 255 / 0.65);
+  --glass-shadow: 0 8px 32px rgb(0 0 0 / 0.12), 0 1px 2px rgb(0 0 0 / 0.08);
+  --glass-blur: 24px;
+  --glass-saturate: 180%;
+  /* Content layer — standard materials. */
+  --material-ultrathin: rgb(255 255 255 / 0.35);
+  --material-thin: rgb(255 255 255 / 0.55);
+  --material-regular: rgb(255 255 255 / 0.72);
+  --material-thick: rgb(255 255 255 / 0.88);
+
+  /* Hit targets — pointer devices. // HIG: accessibility */
+  --hit: 28px; /* recommended */
+  --hit-min: 20px; /* minimum */
+  /* Spacing around controls. // HIG: accessibility */
+  --space-bezeled: 12px;
+  --space-borderless: 24px;
+
+  /* Layout. // HIG: layout "readable-width guides" */
+  --readable-width: 680px;
+  --sidebar-width: 248px;
+  --toolbar-height: 52px;
+  --tabbar-height: 64px;
+
+  /* Motion */
+  --dur-fast: 150ms;
+  --dur: 250ms;
+  --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+
+  /* Fonts — system font, never embedded. // HIG: typography */
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", system-ui, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", Menlo, monospace; /* SF Mono is part of the SF family. // HIG: typography */
+
+  /*
+   * Text styles — COMPACT size class (iOS "Large" table) is the mobile-first default.
+   * rem units so browser text zoom up to 200% works. // HIG: typography, accessibility
+   * Weights are Regular/Medium/Semibold/Bold only; no Ultralight/Thin/Light. // HIG: typography
+   */
+  --t-largeTitle: 400 2.125rem/2.5625rem var(--font-sans); /* 34/41 */
+  --t-title1: 400 1.75rem/2.125rem var(--font-sans); /* 28/34 */
+  --t-title2: 400 1.375rem/1.75rem var(--font-sans); /* 22/28 */
+  --t-title3: 400 1.25rem/1.5625rem var(--font-sans); /* 20/25 */
+  --t-headline: 600 1.0625rem/1.375rem var(--font-sans); /* 17/22 Semibold */
+  --t-body: 400 1.0625rem/1.375rem var(--font-sans); /* 17/22 */
+  --t-callout: 400 1rem/1.3125rem var(--font-sans); /* 16/21 */
+  --t-subheadline: 400 0.9375rem/1.25rem var(--font-sans); /* 15/20 */
+  --t-footnote: 400 0.8125rem/1.125rem var(--font-sans); /* 13/18 */
+  --t-caption1: 400 0.75rem/1rem var(--font-sans); /* 12/16 */
+  --t-caption2: 400 0.6875rem/0.8125rem var(--font-sans); /* 11/13 — mobile minimum 11pt */
+  --w-emphasized: 600; /* Emphasized variant = semibold/bold. // HIG: typography "Emphasized" */
+}
+
+/* REGULAR size class — macOS table. Layout follows size class, not device. // HIG: layout, typography */
+@media (min-width: 768px) {
+  :root {
+    --t-largeTitle: 400 1.625rem/2rem var(--font-sans); /* 26/32 */
+    --t-title1: 400 1.375rem/1.625rem var(--font-sans); /* 22/26 */
+    --t-title2: 400 1.0625rem/1.375rem var(--font-sans); /* 17/22 */
+    --t-title3: 400 0.9375rem/1.25rem var(--font-sans); /* 15/20 */
+    --t-headline: 700 0.8125rem/1rem var(--font-sans); /* 13/16 Bold */
+    --t-body: 400 0.8125rem/1rem var(--font-sans); /* 13/16 */
+    --t-callout: 400 0.75rem/0.9375rem var(--font-sans); /* 12/15 */
+    --t-subheadline: 400 0.6875rem/0.875rem var(--font-sans); /* 11/14 */
+    --t-footnote: 400 0.625rem/0.8125rem var(--font-sans); /* 10/13 — desktop minimum 10pt */
+    --t-caption1: 400 0.625rem/0.8125rem var(--font-sans); /* 10/13 */
+    --t-caption2: 500 0.625rem/0.8125rem var(--font-sans); /* 10/13 Medium */
+    --w-emphasized: 700;
+  }
+}
+
+/* Touch input → larger hit targets. // HIG: accessibility */
+@media (pointer: coarse) {
+  :root {
+    --hit: 44px;
+    --hit-min: 28px;
+  }
+}
+
+/* ───────────────────────── 2. DARK ───────────────────────── */
+/* Both variants are always defined, even if a single mode ships. // HIG: color */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --c-red: 255 66 69;
+    --c-orange: 255 146 48;
+    --c-yellow: 255 214 0;
+    --c-green: 48 209 88;
+    --c-mint: 0 218 195;
+    --c-teal: 0 210 224;
+    --c-cyan: 60 211 254;
+    --c-blue: 0 145 255;
+    --c-indigo: 109 124 255;
+    --c-purple: 219 52 242;
+    --c-pink: 255 55 95;
+    --c-brown: 183 138 102;
+    --c-gray: 142 142 147;
+    --fg-red: 255 66 69;
+    --fg-orange: 255 146 48;
+    --fg-yellow: 255 214 0;
+    --fg-green: 48 209 88;
+    --fg-blue: 0 145 255;
+    --fg-gray: 152 152 157;
+    --accent-fill: 10 100 220;
+    --link: rgb(0 145 255);
+    --label: rgb(255 255 255);
+    --secondary-label: rgb(235 235 245 / 0.65);
+    --tertiary-label: rgb(235 235 245 / 0.4);
+    --quaternary-label: rgb(235 235 245 / 0.16);
+    --placeholder-text: rgb(235 235 245 / 0.45);
+    --separator: rgb(84 84 88 / 0.6);
+    --opaque-separator: rgb(56 56 58);
+    --system-background: rgb(0 0 0);
+    --secondary-system-background: rgb(28 28 30);
+    --tertiary-system-background: rgb(44 44 46);
+    --system-grouped-background: rgb(0 0 0);
+    --secondary-system-grouped-background: rgb(28 28 30);
+    --tertiary-system-grouped-background: rgb(44 44 46);
+    --system-fill: rgb(120 120 128 / 0.36);
+    --secondary-system-fill: rgb(120 120 128 / 0.32);
+    --tertiary-system-fill: rgb(118 118 128 / 0.24);
+    --glass-regular-bg: rgb(36 36 38 / 0.66);
+    --glass-clear-bg: rgb(0 0 0 / 0.2);
+    --glass-border: rgb(255 255 255 / 0.12);
+    --glass-shadow: 0 8px 32px rgb(0 0 0 / 0.45), 0 1px 2px rgb(0 0 0 / 0.3);
+    --material-ultrathin: rgb(30 30 32 / 0.35);
+    --material-thin: rgb(30 30 32 / 0.55);
+    --material-regular: rgb(30 30 32 / 0.72);
+    --material-thick: rgb(30 30 32 / 0.88);
+  }
+}
+:root[data-theme="dark"] {
+  --c-red: 255 66 69;
+  --c-orange: 255 146 48;
+  --c-yellow: 255 214 0;
+  --c-green: 48 209 88;
+  --c-mint: 0 218 195;
+  --c-teal: 0 210 224;
+  --c-cyan: 60 211 254;
+  --c-blue: 0 145 255;
+  --c-indigo: 109 124 255;
+  --c-purple: 219 52 242;
+  --c-pink: 255 55 95;
+  --c-brown: 183 138 102;
+  --c-gray: 142 142 147;
+  --fg-red: 255 66 69;
+  --fg-orange: 255 146 48;
+  --fg-yellow: 255 214 0;
+  --fg-green: 48 209 88;
+  --fg-blue: 0 145 255;
+  --fg-gray: 152 152 157;
+  --accent-fill: 10 100 220;
+  --link: rgb(0 145 255);
+  --label: rgb(255 255 255);
+  --secondary-label: rgb(235 235 245 / 0.65);
+  --tertiary-label: rgb(235 235 245 / 0.4);
+  --quaternary-label: rgb(235 235 245 / 0.16);
+  --placeholder-text: rgb(235 235 245 / 0.45);
+  --separator: rgb(84 84 88 / 0.6);
+  --opaque-separator: rgb(56 56 58);
+  --system-background: rgb(0 0 0);
+  --secondary-system-background: rgb(28 28 30);
+  --tertiary-system-background: rgb(44 44 46);
+  --system-grouped-background: rgb(0 0 0);
+  --secondary-system-grouped-background: rgb(28 28 30);
+  --tertiary-system-grouped-background: rgb(44 44 46);
+  --system-fill: rgb(120 120 128 / 0.36);
+  --secondary-system-fill: rgb(120 120 128 / 0.32);
+  --tertiary-system-fill: rgb(118 118 128 / 0.24);
+  --glass-regular-bg: rgb(36 36 38 / 0.66);
+  --glass-clear-bg: rgb(0 0 0 / 0.2);
+  --glass-border: rgb(255 255 255 / 0.12);
+  --glass-shadow: 0 8px 32px rgb(0 0 0 / 0.45), 0 1px 2px rgb(0 0 0 / 0.3);
+  --material-ultrathin: rgb(30 30 32 / 0.35);
+  --material-thin: rgb(30 30 32 / 0.55);
+  --material-regular: rgb(30 30 32 / 0.72);
+  --material-thick: rgb(30 30 32 / 0.88);
+}
+
+/* ───────────────────────── 3. INCREASED CONTRAST ───────────────────────── */
+/* Bound to prefers-contrast: more, plus [data-contrast="more"] for the Settings preview. // HIG: color, accessibility */
+@media (prefers-contrast: more) {
+  :root {
+    --c-red: 233 21 45;
+    --c-orange: 197 83 0;
+    --c-yellow: 161 106 0;
+    --c-green: 0 137 50;
+    --c-mint: 0 133 117;
+    --c-teal: 0 129 152;
+    --c-cyan: 0 126 174;
+    --c-blue: 30 110 244;
+    --c-indigo: 86 74 222;
+    --c-purple: 176 47 194;
+    --c-pink: 231 18 77;
+    --c-brown: 149 109 81;
+    --c-gray: 108 108 112;
+    --accent-fill: 20 90 210;
+    --secondary-label: rgb(60 60 67 / 0.88);
+    --tertiary-label: rgb(60 60 67 / 0.7);
+    --separator: rgb(60 60 67 / 0.5);
+    --glass-regular-bg: rgb(250 250 252 / 0.94);
+  }
+}
+@media (prefers-contrast: more) and (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --c-red: 255 97 101;
+    --c-orange: 255 160 86;
+    --c-yellow: 254 223 67;
+    --c-green: 74 217 104;
+    --c-mint: 84 223 203;
+    --c-teal: 59 221 236;
+    --c-cyan: 109 217 255;
+    --c-blue: 92 184 255;
+    --c-indigo: 167 170 255;
+    --c-purple: 234 141 255;
+    --c-pink: 255 138 196;
+    --c-brown: 219 166 121;
+    --c-gray: 174 174 178;
+    --fg-red: 255 97 101;
+    --fg-orange: 255 160 86;
+    --fg-yellow: 254 223 67;
+    --fg-green: 74 217 104;
+    --fg-blue: 92 184 255;
+    --link: rgb(92 184 255);
+    --secondary-label: rgb(235 235 245 / 0.82);
+    --tertiary-label: rgb(235 235 245 / 0.62);
+    --separator: rgb(140 140 145 / 0.8);
+    --glass-regular-bg: rgb(36 36 38 / 0.94);
+  }
+}
+@media (prefers-contrast: more) {
+  :root[data-theme="dark"] {
+    --c-red: 255 97 101;
+    --c-orange: 255 160 86;
+    --c-yellow: 254 223 67;
+    --c-green: 74 217 104;
+    --c-mint: 84 223 203;
+    --c-teal: 59 221 236;
+    --c-cyan: 109 217 255;
+    --c-blue: 92 184 255;
+    --c-indigo: 167 170 255;
+    --c-purple: 234 141 255;
+    --c-pink: 255 138 196;
+    --c-brown: 219 166 121;
+    --c-gray: 174 174 178;
+    --fg-red: 255 97 101;
+    --fg-orange: 255 160 86;
+    --fg-yellow: 254 223 67;
+    --fg-green: 74 217 104;
+    --fg-blue: 92 184 255;
+    --link: rgb(92 184 255);
+    --secondary-label: rgb(235 235 245 / 0.82);
+    --tertiary-label: rgb(235 235 245 / 0.62);
+    --separator: rgb(140 140 145 / 0.8);
+    --glass-regular-bg: rgb(36 36 38 / 0.94);
+  }
+}
+/* Settings preview of increased contrast (light, then dark). */
+:root[data-contrast="more"] {
+  --c-red: 233 21 45;
+  --c-orange: 197 83 0;
+  --c-yellow: 161 106 0;
+  --c-green: 0 137 50;
+  --c-mint: 0 133 117;
+  --c-teal: 0 129 152;
+  --c-cyan: 0 126 174;
+  --c-blue: 30 110 244;
+  --c-indigo: 86 74 222;
+  --c-purple: 176 47 194;
+  --c-pink: 231 18 77;
+  --c-brown: 149 109 81;
+  --c-gray: 108 108 112;
+  --accent-fill: 20 90 210;
+  --secondary-label: rgb(60 60 67 / 0.88);
+  --tertiary-label: rgb(60 60 67 / 0.7);
+  --separator: rgb(60 60 67 / 0.5);
+  --glass-regular-bg: rgb(250 250 252 / 0.94);
+}
+@media (prefers-color-scheme: dark) {
+  :root[data-contrast="more"]:not([data-theme="light"]) {
+    --c-blue: 92 184 255;
+    --c-green: 74 217 104;
+    --c-orange: 255 160 86;
+    --c-red: 255 97 101;
+    --c-indigo: 167 170 255;
+    --c-teal: 59 221 236;
+    --c-pink: 255 138 196;
+    --c-gray: 174 174 178;
+    --fg-red: 255 97 101;
+    --fg-orange: 255 160 86;
+    --fg-green: 74 217 104;
+    --fg-blue: 92 184 255;
+    --link: rgb(92 184 255);
+    --accent-fill: 10 100 220;
+    --secondary-label: rgb(235 235 245 / 0.82);
+    --tertiary-label: rgb(235 235 245 / 0.62);
+    --separator: rgb(140 140 145 / 0.8);
+    --glass-regular-bg: rgb(36 36 38 / 0.94);
+  }
+}
+:root[data-contrast="more"][data-theme="dark"] {
+  --c-blue: 92 184 255;
+  --c-green: 74 217 104;
+  --c-orange: 255 160 86;
+  --c-red: 255 97 101;
+  --c-indigo: 167 170 255;
+  --c-teal: 59 221 236;
+  --c-pink: 255 138 196;
+  --c-gray: 174 174 178;
+  --fg-red: 255 97 101;
+  --fg-orange: 255 160 86;
+  --fg-green: 74 217 104;
+  --fg-blue: 92 184 255;
+  --link: rgb(92 184 255);
+  --accent-fill: 10 100 220;
+  --secondary-label: rgb(235 235 245 / 0.82);
+  --tertiary-label: rgb(235 235 245 / 0.62);
+  --separator: rgb(140 140 145 / 0.8);
+  --glass-regular-bg: rgb(36 36 38 / 0.94);
+}
+
+/* ───────────────────────── 4. REDUCED TRANSPARENCY / MOTION ───────────────────────── */
+/* Blur off, fall back to opaque semantic background. // HIG: materials, accessibility */
+@media (prefers-reduced-transparency: reduce) {
+  :root {
+    --glass-regular-bg: var(--secondary-system-background);
+    --glass-clear-bg: var(--secondary-system-background);
+    --glass-blur: 0px;
+    --glass-saturate: 100%;
+    --material-ultrathin: var(--secondary-system-background);
+    --material-thin: var(--secondary-system-background);
+    --material-regular: var(--secondary-system-background);
+    --material-thick: var(--secondary-system-background);
+  }
+}
