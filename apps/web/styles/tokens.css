@@ -44,6 +44,7 @@
   /* Filled control with white label. Plain blue gives 3.5:1 with white, so a darker step is used. // HIG: accessibility */
   --accent-fill: 30 110 244;
   --on-accent: 255 255 255;
+  --on-light: 0 0 0; /* symbol ink on light solid fills (graph nodes) */
   --link: rgb(30 110 244); /* // HIG: color "link" */
 
   /* One meaning per color. // HIG: color — status is never color alone: icon + text too. // HIG: accessibility */

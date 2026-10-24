@@ -62,7 +62,7 @@ export const Api = {
   deleteDocument: (id: string) => api<void>(`/documents/${id}`, { method: "DELETE" }),
   collections: () => api<Collection[]>("/collections"),
   createCollection: (name: string) => api<Collection>("/collections", { method: "POST", body: JSON.stringify({ name }) }),
-  graph: (p: { center?: string; depth?: number; limit?: number; collection?: string | null } = {}) => {
+  graph: (p: { center?: string; depth?: number; limit?: number; collection?: string | null; document?: string | null } = {}) => {
     const q = new URLSearchParams();
     Object.entries(p).forEach(([k, v]) => v !== undefined && v !== null && q.set(k, String(v)));
     return api<GraphResponse>(`/graph?${q}`);

@@ -7,12 +7,13 @@ interface PopoverProps {
   trigger: (p: { "aria-expanded": boolean; "aria-controls": string; onClick: () => void }) => ReactNode;
   children: ReactNode | ((close: () => void) => ReactNode);
   align?: "start" | "end";
+  side?: "bottom" | "top";
   label: string;
   className?: string;
 }
 
 /** Popover on regular glass (text-heavy control). // HIG: materials */
-export function Popover({ trigger, children, align = "end", label, className = "" }: PopoverProps) {
+export function Popover({ trigger, children, align = "end", side = "bottom", label, className = "" }: PopoverProps) {
   const [open, setOpen] = useState(false);
   const id = useId();
   const root = useRef<HTMLDivElement>(null);
@@ -47,7 +48,7 @@ export function Popover({ trigger, children, align = "end", label, className = "
           id={id}
           role="dialog"
           aria-label={label}
-          className={`absolute top-full mt-2 z-50 rounded-card p-2 w-80 max-w-[calc(100vw-2rem)] ${align === "end" ? "right-0" : "left-0"} ${className}`}
+          className={`absolute ${side === "bottom" ? "top-full mt-2" : "bottom-full mb-2"} z-50 rounded-card p-2 w-80 max-w-[calc(100vw-2rem)] ${align === "end" ? "right-0" : "left-0"} ${className}`}
           style={{ animation: "dp-fade-in var(--dur-fast) var(--ease)" }}
         >
           <div ref={panel} tabIndex={-1} className="outline-none">

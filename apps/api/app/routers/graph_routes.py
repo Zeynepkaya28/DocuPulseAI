@@ -17,10 +17,13 @@ def get_graph(
     depth: int = Query(1, ge=1, le=3),
     limit: int = Query(50, ge=1, le=500),
     collection: str | None = None,
+    document: str | None = None,
     user: User = Depends(current_user),
 ):
-    """Subgraph from Neo4j, scoped to the caller's readable documents."""
+    """Subgraph from Neo4j, scoped to the caller's readable documents (optionally one document)."""
     docs = access.visible_document_ids(user.id, collection)
+    if document:
+        docs = [d for d in docs if d == document]
     return graph.subgraph(docs, center=center, depth=depth, limit=limit)
 
 
