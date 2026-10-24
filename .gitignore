@@ -19,3 +19,6 @@ supabase/.temp/
 playwright-report/
 test-results/
 apps/web/e2e/screenshots/
+
+# Filled-in copy of supabase/production-secrets.sql.example
+supabase/production-secrets.sql

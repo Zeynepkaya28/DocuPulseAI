@@ -16,7 +16,8 @@ app = FastAPI(
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.cors_origins,
-    allow_origin_regex=r"https://docupulse-web-[a-z0-9-]+\.vercel\.app" if settings.cors_origins else None,
+    # Preview deployments of the web project, e.g. ^https://docupulse-web-[a-z0-9-]+\.vercel\.app$
+    allow_origin_regex=settings.allowed_origin_regex or None,
     allow_credentials=True,
     allow_methods=["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
     allow_headers=["Authorization", "Content-Type"],

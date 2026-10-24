@@ -40,6 +40,7 @@ class Settings(BaseSettings):
     rate_limit_per_minute: int = 30
 
     allowed_origins: str = "http://localhost:3000"
+    allowed_origin_regex: str = ""
 
     @property
     def cors_origins(self) -> list[str]:
