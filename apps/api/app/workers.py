@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import logging
 import math
+import re
 import time
 from collections.abc import Callable
 from typing import Any
@@ -172,15 +173,22 @@ def _ingest_part(doc: dict[str, Any], ev: DocumentUploadedEvent, data: bytes, pa
     refresh(ev.document_id)
 
 
+def _plain(text: str) -> str:
+    """Markdown → plain text for the fallback summary (drop heading marks, emphasis, extra space)."""
+    text = re.sub(r"(?m)^\s{0,3}#{1,6}\s*", "", text)
+    text = re.sub(r"[*_`>]+", "", text)
+    return re.sub(r"\s+", " ", text)
+
+
 def _summarize(document_id: str, text: str) -> None:
     try:
         out = provider().complete_json(
             "Summarize the document in 2-3 sentences, in the document's language. Plain text.",
             text, SUMMARY_SCHEMA,
         )
-        summary = (out.get("summary") or "").strip() or text[:280].strip()
+        summary = (out.get("summary") or "").strip() or _plain(text)[:280].strip()
     except Exception:  # summary is optional; never fail ingestion for it
-        summary = text[:280].strip()
+        summary = _plain(text)[:280].strip()
     db.execute("update public.documents set summary = %s where id = %s and summary is null", (summary, document_id))
 
 

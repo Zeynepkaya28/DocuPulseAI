@@ -11,12 +11,12 @@ type ColKey = "title" | "mime" | "author" | "date" | "entities" | "status";
 
 /** Column titles: noun phrases, Title Case, no punctuation. // HIG: lists-and-tables */
 const COLUMNS: { key: ColKey; title: string; width: number; numeric?: boolean }[] = [
-  { key: "title", title: "Ad", width: 300 },
-  { key: "mime", title: "Tür", width: 90 },
-  { key: "author", title: "Yazar", width: 150 },
-  { key: "date", title: "Tarih", width: 120 },
-  { key: "entities", title: "Varlık", width: 80, numeric: true },
-  { key: "status", title: "Durum", width: 140 },
+  { key: "title", title: "Ad", width: 0 /* fluid until resized */ },
+  { key: "mime", title: "Tür", width: 72 },
+  { key: "author", title: "Yazar", width: 110 },
+  { key: "date", title: "Tarih", width: 104 },
+  { key: "entities", title: "Varlık", width: 60, numeric: true },
+  { key: "status", title: "Durum", width: 124 },
 ];
 
 const MIN_W = 60;
@@ -28,9 +28,13 @@ interface Props {
   editing: boolean;
   onOpen: (id: string) => void;
   onToggle: (id: string) => void;
+  /** Split view with the detail pane open: keep only Ad, Varlık, Durum. */
+  narrow?: boolean;
 }
 
-export function LibraryTable({ docs, selected, focusedId, editing, onOpen, onToggle }: Props) {
+export function LibraryTable({ docs, selected, focusedId, editing, onOpen, onToggle, narrow }: Props) {
+  const cols = narrow ? COLUMNS.filter((c) => c.key === "title" || c.key === "entities" || c.key === "status") : COLUMNS;
+  const show = new Set(cols.map((c) => c.key));
   const { jobs } = useJobs();
   const [sort, setSort] = useState<{ key: ColKey; dir: 1 | -1 }>({ key: "date", dir: -1 });
   const [widths, setWidths] = useState<Record<ColKey, number>>(
@@ -62,8 +66,8 @@ export function LibraryTable({ docs, selected, focusedId, editing, onOpen, onTog
     setSort((s) => (s.key === key ? { key, dir: (s.dir * -1) as 1 | -1 } : { key, dir: key === "date" || key === "entities" ? -1 : 1 }));
 
   // Resizable columns: pointer drag or ←/→ on the handle.
-  const startResize = (key: ColKey, startX: number) => {
-    const startW = widths[key];
+  const startResize = (key: ColKey, startX: number, current: number) => {
+    const startW = widths[key] || current;
     const move = (e: PointerEvent) => setWidths((w) => ({ ...w, [key]: Math.max(MIN_W, startW + e.clientX - startX) }));
     const up = () => {
       window.removeEventListener("pointermove", move);
@@ -88,12 +92,12 @@ export function LibraryTable({ docs, selected, focusedId, editing, onOpen, onTog
       <table className="w-full table-fixed border-collapse t-body" aria-label="Dokümanlar" aria-multiselectable={editing || undefined}>
         <colgroup>
           {editing && <col style={{ width: 36 }} />}
-          {COLUMNS.map((c) => <col key={c.key} style={{ width: widths[c.key] }} />)}
+          {cols.map((c) => <col key={c.key} style={{ width: widths[c.key] || undefined }} />)}
         </colgroup>
         <thead className="sticky top-0 z-10 bg-bg">
           <tr className="border-b border-separator">
             {editing && <th scope="col"><span className="sr-only">Seç</span></th>}
-            {COLUMNS.map((c) => (
+            {cols.map((c) => (
               <th
                 key={c.key}
                 scope="col"
@@ -114,10 +118,10 @@ export function LibraryTable({ docs, selected, focusedId, editing, onOpen, onTog
                   aria-label={`${c.title} sütun genişliği`}
                   aria-valuenow={widths[c.key]}
                   tabIndex={0}
-                  onPointerDown={(e) => startResize(c.key, e.clientX)}
+                  onPointerDown={(e) => startResize(c.key, e.clientX, (e.currentTarget.parentElement as HTMLElement).offsetWidth)}
                   onKeyDown={(e) => {
-                    if (e.key === "ArrowLeft") setWidths((w) => ({ ...w, [c.key]: Math.max(MIN_W, w[c.key] - 16) }));
-                    if (e.key === "ArrowRight") setWidths((w) => ({ ...w, [c.key]: w[c.key] + 16 }));
+                    if (e.key === "ArrowLeft") setWidths((w) => ({ ...w, [c.key]: Math.max(MIN_W, (w[c.key] || 320) - 16) }));
+                    if (e.key === "ArrowRight") setWidths((w) => ({ ...w, [c.key]: (w[c.key] || 320) + 16 }));
                   }}
                   className="absolute right-0 top-1.5 bottom-1.5 w-2 cursor-col-resize border-r border-separator"
                 />
@@ -151,12 +155,12 @@ export function LibraryTable({ docs, selected, focusedId, editing, onOpen, onTog
                   <span className="flex items-center gap-2 min-w-0">
                     <Icon name={TYPE_SYMBOL[d.mime] ?? "doc"} className="text-label-secondary" />
                     {/* Middle truncation keeps version/extension visible. // HIG: lists-and-tables */}
-                    <MiddleTruncate text={d.title} max={Math.max(12, Math.floor(widths.title / 8))} className="min-w-0" />
+                    <MiddleTruncate text={d.title} max={Math.max(12, Math.floor((widths.title || 320) / 8))} className="min-w-0" />
                   </span>
                 </td>
-                <td className="px-2 text-label-secondary">{TYPE_LABEL[d.mime] ?? "—"}</td>
-                <td className="px-2 text-label-secondary truncate">{d.author ?? "—"}</td>
-                <td className="px-2 text-label-secondary whitespace-nowrap">{formatDate(d.published_at ?? d.created_at)}</td>
+                {show.has("mime") && <td className="px-2 text-label-secondary">{TYPE_LABEL[d.mime] ?? "—"}</td>}
+                {show.has("author") && <td className="px-2 text-label-secondary truncate">{d.author ?? "—"}</td>}
+                {show.has("date") && <td className="px-2 text-label-secondary whitespace-nowrap">{formatDate(d.published_at ?? d.created_at)}</td>}
                 <td className="px-2 text-right tabular-nums">{d.entity_count}</td>
                 <td className="px-2"><StatusLabel doc={d} job={jobFor(d.id)} /></td>
               </tr>

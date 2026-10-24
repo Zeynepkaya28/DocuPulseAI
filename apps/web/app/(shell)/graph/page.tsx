@@ -123,12 +123,11 @@ function GraphScreen() {
     };
   }, [data, layout, reduced]);
 
+  // Re-fit after switching layouts (the canvas fits by itself when the node set changes).
   useEffect(() => {
-    if (data.nodes.length) {
-      const t = setTimeout(() => flow.fitView({ padding: 0.25, duration: reduced ? 0 : 300 }), reduced ? 0 : 600);
-      return () => clearTimeout(t);
-    }
-  }, [data.nodes.length, layout, flow, reduced]);
+    const t = setTimeout(() => flow.fitView({ padding: 0.3, maxZoom: 1.2, duration: reduced ? 0 : 300 }), reduced ? 0 : 500);
+    return () => clearTimeout(t);
+  }, [layout, flow, reduced]);
 
   const expand = useCallback(async (id: string) => {
     setExpanding(true);
@@ -175,7 +174,7 @@ function GraphScreen() {
           <GraphListFallback nodes={view.nodes} edges={view.edges} selectedId={selected} onSelect={setSelected} />
         ) : (
           <GraphCanvas nodes={view.nodes} edges={view.edges} positions={positions} selectedId={selected}
-            onSelect={setSelected} showMinimap={minimap && isRegular} />
+            onSelect={setSelected} showMinimap={minimap && isRegular && !selected} />
         )}
 
         {(loading || empty || error) && (

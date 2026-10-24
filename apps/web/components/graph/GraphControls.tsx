@@ -1,5 +1,6 @@
 "use client";
 import { useReactFlow } from "@xyflow/react";
+import { useShell } from "@/components/shell/ShellContext";
 import { Glass } from "@/components/ui/Glass";
 import { Icon } from "@/components/ui/Icon";
 import { Popover } from "@/components/ui/Popover";
@@ -28,8 +29,11 @@ const btn = "hit grid place-items-center rounded-full text-label hover:bg-fill-t
  */
 export function GraphControls({ layout, onLayout, hidden, onToggleType, minimap, onMinimap, listView, onListView }: Props) {
   const flow = useReactFlow();
+  const { isRegular, sidebarOpen } = useShell();
   return (
-    <div className="absolute left-3 bottom-3 z-10 flex flex-col gap-2 regular:bottom-4 regular:left-4" style={{ bottom: "var(--controls-bottom, 12px)" }}>
+    <div className="absolute z-10 flex flex-col gap-2 transition-[left] duration motion-transform"
+      // Clear of the floating sidebar. // HIG: sidebars
+      style={{ bottom: "var(--controls-bottom, 12px)", left: isRegular && sidebarOpen ? "calc(var(--sidebar-width) + 20px)" : "12px" }}>
       {!listView && (
         <Glass variant="clear" dim className="flex flex-col rounded-full p-0.5" role="group" aria-label="Yakınlaştırma">
           <button type="button" className={btn} onClick={() => flow.zoomIn()} aria-label="Yakınlaştır"><Icon name="plus" /></button>

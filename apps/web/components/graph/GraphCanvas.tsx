@@ -1,9 +1,9 @@
 "use client";
 import "@xyflow/react/dist/base.css";
-import { memo, useMemo, type KeyboardEvent } from "react";
+import { memo, useCallback, useEffect, useMemo, useState, type KeyboardEvent } from "react";
 import {
-  BaseEdge, EdgeLabelRenderer, Handle, MiniMap, Position, ReactFlow, getStraightPath, useReactFlow, useStore,
-  type Edge, type EdgeProps, type Node, type NodeProps,
+  BaseEdge, EdgeLabelRenderer, Handle, MiniMap, Position, ReactFlow, applyNodeChanges, getStraightPath, useReactFlow, useStore,
+  type Edge, type EdgeProps, type Node, type NodeChange, type NodeProps,
 } from "@xyflow/react";
 import type { GraphEdge, GraphNode } from "@docupulse/contracts";
 import { Icon } from "@/components/ui/Icon";
@@ -103,7 +103,7 @@ export function GraphCanvas({ nodes, edges, positions, selectedId, onSelect, sho
     return s;
   }, [edges, selectedId]);
 
-  const rfNodes: Node<EntityData>[] = useMemo(
+  const computed: Node<EntityData>[] = useMemo(
     () =>
       nodes.map((n) => ({
         id: n.id,
@@ -115,6 +115,29 @@ export function GraphCanvas({ nodes, edges, positions, selectedId, onSelect, sho
       })),
     [nodes, positions, neighbors, selectedId],
   );
+
+  // React Flow measures nodes and reports sizes through onNodesChange; keep those measurements
+  // while positions/data come from props, otherwise nodes stay hidden.
+  const [rfNodes, setRfNodes] = useState<Node<EntityData>[]>([]);
+  useEffect(() => {
+    setRfNodes((prev) => {
+      const old = new Map(prev.map((n) => [n.id, n]));
+      return computed.map((n) => ({ ...n, measured: old.get(n.id)?.measured }));
+    });
+  }, [computed]);
+  const onNodesChange = useCallback(
+    (changes: NodeChange<Node<EntityData>>[]) =>
+      setRfNodes((ns) => applyNodeChanges(changes.filter((c) => c.type === "dimensions" || c.type === "select"), ns)),
+    [],
+  );
+
+  // Fit once every node of a new node set has been measured (fitting earlier zooms to the max).
+  const measured = rfNodes.length > 0 && rfNodes.every((n) => n.measured?.width);
+  const nodeSetKey = rfNodes.map((n) => n.id).join("|");
+  useEffect(() => {
+    if (measured) flow.fitView({ padding: 0.3, maxZoom: 1.2 });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [measured, nodeSetKey]);
 
   const rfEdges: Edge<RelData>[] = useMemo(
     () =>
@@ -163,13 +186,14 @@ export function GraphCanvas({ nodes, edges, positions, selectedId, onSelect, sho
         edges={rfEdges}
         nodeTypes={nodeTypes}
         edgeTypes={edgeTypes}
+        onNodesChange={onNodesChange}
         onNodeClick={(_, n) => onSelect(n.id)}
         onPaneClick={() => onSelect(null)}
         nodesDraggable={false}
         nodesConnectable={false}
         nodesFocusable
         edgesFocusable={false}
-        fitView
+
         fitViewOptions={{ padding: 0.25 }}
         minZoom={0.15}
         maxZoom={2.5}

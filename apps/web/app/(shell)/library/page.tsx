@@ -133,7 +133,7 @@ export default function LibraryPage() {
         // Split view: sidebar | table | detail. Most important content leading and on top. // HIG: layout, sidebars
         <div className={`grid ${showDetail ? "grid-cols-[minmax(0,1fr)_minmax(300px,380px)]" : "grid-cols-1"} gap-0`}>
           <div className="min-w-0 px-2">
-            <LibraryTable docs={docs} selected={selected} focusedId={focusedId} editing={editing} onOpen={open} onToggle={toggle} />
+            <LibraryTable docs={docs} selected={selected} focusedId={focusedId} editing={editing} onOpen={open} onToggle={toggle} narrow={!!showDetail} />
           </div>
           {showDetail && (
             <aside aria-label="Doküman ayrıntıları" className="border-l border-separator min-h-[calc(100dvh-var(--toolbar-height))] relative">
