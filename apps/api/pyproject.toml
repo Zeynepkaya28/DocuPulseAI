@@ -14,5 +14,5 @@ extend-exclude = ["app/contracts.py"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "B", "UP"]
-ignore = ["B008"]
+ignore = ["B008", "E501"]  # long lines are mostly inline SQL
 
