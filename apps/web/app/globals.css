@@ -80,8 +80,8 @@
     background: linear-gradient(to bottom, var(--scroll-edge-color, var(--system-background)) 35%, transparent);
     -webkit-backdrop-filter: blur(4px);
     backdrop-filter: blur(4px);
-    -webkit-mask-image: linear-gradient(to bottom, #000 50%, transparent);
-    mask-image: linear-gradient(to bottom, #000 50%, transparent);
+    -webkit-mask-image: linear-gradient(to bottom, var(--mask-solid) 50%, transparent);
+    mask-image: linear-gradient(to bottom, var(--mask-solid) 50%, transparent);
   }
   .scroll-edge-bottom {
     isolation: isolate;

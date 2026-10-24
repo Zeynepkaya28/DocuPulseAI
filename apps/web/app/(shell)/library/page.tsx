@@ -146,7 +146,7 @@ export default function LibraryPage() {
           )}
         </div>
       ) : (
-        <div className="min-h-full bg-bg-grouped py-2">
+        <div className="min-h-[calc(100dvh-var(--toolbar-height))] bg-bg-grouped py-2">
           <LibraryList docs={docs} editing={editing} selected={selected} focusedId={focusedId} onToggle={toggle} />
         </div>
       )}

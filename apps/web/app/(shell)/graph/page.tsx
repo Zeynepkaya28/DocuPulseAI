@@ -38,7 +38,7 @@ function NodeSearch({ value, onChange }: { value: string; onChange: (v: string) 
       <Icon name="magnifyingglass" className="text-label-secondary" />
       <input type="search" aria-label="Düğümlerde ara" placeholder="Düğüm adına göre filtrele" value={value}
         onChange={(e) => onChange(e.target.value)} onKeyDown={(e) => e.key === "Escape" && onChange("")}
-        className="flex-1 min-w-0 bg-transparent outline-none t-body text-label [&::-webkit-search-cancel-button]:hidden" />
+        className="flex-1 min-w-0 self-stretch min-h-hit bg-transparent outline-none t-body text-label [&::-webkit-search-cancel-button]:hidden" />
     </span>
   );
 }

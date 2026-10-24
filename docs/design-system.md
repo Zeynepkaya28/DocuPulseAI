@@ -37,7 +37,7 @@ Ham renk değerleri yalnızca [`apps/web/styles/tokens.css`](../apps/web/styles/
 
 HIG değerleri WCAG 4.5:1 sınırını her yerde sağlamıyor. Faz A7 denetimini geçmek için:
 
-1. **`--secondary-label` alfa değeri 0.6 → 0.75** (light). Footnote boyutunda grouped arka planda 4.5:1 sağlanır.
+1. **`--secondary-label` alfa değeri 0.6 → 0.78** (light). Footnote boyutunda dolgu (fill) ve grouped arka planlarda 4.5:1 sağlanır.
 2. **`--accent-fill`**: Beyaz yazılı dolgu butonlarda düz sistem mavisi 3.5:1 veriyor. Bu yüzden light'ta hc-light mavisi (30,110,244 → 4.6:1), dark'ta 10,100,220 kullanılır. Odak halkası ve vurgu için `--accent` aynen kalır.
 3. **`--fg-*`**: Light modda yeşil/turuncu ikonlar beyaz zeminde 3:1'in altında kalıyor. Bu yüzden ikon ve metin için hc-light değerleri kullanılır. Dark modda sistem değerleri yeterli.
 

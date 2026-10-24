@@ -194,7 +194,7 @@ export default function SettingsPage() {
                 <span className="block t-footnote text-label-secondary">Önizleme; sistem ayarı açıksa her zaman uygulanır</span>
               </span>
               <input type="checkbox" role="switch" checked={contrast} onChange={(e) => applyContrast(e.target.checked)}
-                className="w-11 h-6 accent-[rgb(var(--accent-fill))]" />
+                className="w-11 h-7 accent-[rgb(var(--accent-fill))]" />
             </label>
             {/* Preview swatches with the status colors in the current mode. */}
             <div className="flex flex-wrap gap-3 px-4 py-3" aria-label="Renk önizlemesi">

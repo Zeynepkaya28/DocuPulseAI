@@ -22,6 +22,7 @@ jobs:
       - run: npm ci
       - run: npm run check -w packages/contracts   # generated TS/Pydantic are up to date
       - run: npm run lint -w apps/web
+      - run: node scripts/hig-lint.mjs            # no hard-coded colors / light weights / embedded fonts
       - run: npm run typecheck -w apps/web
       - run: npm run build -w apps/web
         env:

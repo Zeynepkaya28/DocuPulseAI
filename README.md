@@ -30,3 +30,19 @@ Yerelde pg_cron, Vercel'deki worker'ları çağıramaz. Kuyrukları elle boşalt
 Şema değişince `npm run gen` çalıştır. CI, üretilen dosyalar eskiyse hata verir.
 
 Opsiyonel: `docker compose --profile showcase up -d` komutu orijinal mimarideki Kafka ve Qdrant'ı yalnızca demo için başlatır. Canlı ortam bunlara bağlı değildir.
+
+## Belgeler
+
+- [Tasarım sistemi](docs/design-system.md): token'lar ve HIG kaynakları
+- [Canlıya alma](docs/deploy.md): Vercel + Supabase + Neo4j AuraDB adımları ve doğrulama listesi
+- [HIG denetimi](docs/hig-audit.md): 15 maddelik kontrol listesi ve ekran görüntüleri
+- [Eval sonuçları](docs/eval-results.md): yalnız vektör ile GraphRAG karşılaştırması
+
+## Testler
+
+```bash
+apps/api/.venv/Scripts/python -m pytest -q apps/api   # API + entegrasyon (yerel stack açıksa)
+npx supabase test db                                  # RLS (pgTAP)
+node scripts/hig-lint.mjs                             # statik HIG kontrolleri
+npm run e2e -w apps/web                               # Playwright HIG denetimi (375/1920 px, açık/koyu)
+```

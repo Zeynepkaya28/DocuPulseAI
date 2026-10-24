@@ -42,7 +42,8 @@ def verify_token(token: str) -> dict:
             key: object = settings.supabase_jwt_secret
         else:
             key = _jwks_client().get_signing_key_from_jwt(token).key
-        return jwt.decode(token, key, algorithms=[alg], audience="authenticated")
+        # Leeway: the auth server clock may run slightly ahead (iat in the "future" right after sign-in).
+        return jwt.decode(token, key, algorithms=[alg], audience="authenticated", leeway=30)
     except jwt.PyJWTError as exc:
         raise HTTPException(status.HTTP_401_UNAUTHORIZED, "Oturum geçersiz veya süresi dolmuş") from exc
 

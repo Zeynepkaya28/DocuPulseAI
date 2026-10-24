@@ -225,7 +225,7 @@ export function SearchField({ variant = "toolbar", autoFocus }: { variant?: "too
             else if (e.key === "Backspace" && !text && tokens.length) setTokens((ts) => ts.slice(0, -1));
             else if (e.key === "Escape") { if (text) setText(""); else setOpen(false); }
           }}
-          className="flex-1 min-w-0 bg-transparent outline-none t-body text-label [&::-webkit-search-cancel-button]:hidden"
+          className="flex-1 min-w-0 self-stretch min-h-hit bg-transparent outline-none t-body text-label [&::-webkit-search-cancel-button]:hidden"
         />
         {text && (
           <button type="button" aria-label="Aramayı temizle" onClick={() => { setText(""); input.current?.focus(); }}

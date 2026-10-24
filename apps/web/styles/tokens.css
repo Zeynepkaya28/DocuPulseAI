@@ -45,7 +45,8 @@
   --accent-fill: 30 110 244;
   --on-accent: 255 255 255;
   --on-light: 0 0 0; /* symbol ink on light solid fills (graph nodes) */
-  --link: rgb(30 110 244); /* // HIG: color "link" */
+  --mask-solid: #000; /* mask-image alpha stop, never painted */
+  --link: rgb(20 95 220); /* // HIG: color "link" — one step darker than tint so text links reach 4.5:1 on grouped backgrounds */
 
   /* One meaning per color. // HIG: color — status is never color alone: icon + text too. // HIG: accessibility */
   --status-processing: var(--fg-blue);
@@ -55,8 +56,8 @@
 
   /* Dynamic (semantic) colors. // HIG: color "Dynamic system colors" */
   --label: rgb(0 0 0);
-  /* Apple uses 0.6 alpha; raised to 0.75 so footnote-size text passes 4.5:1 on grouped backgrounds. // HIG: accessibility */
-  --secondary-label: rgb(60 60 67 / 0.75);
+  /* Apple uses 0.6 alpha; raised to 0.78 so footnote-size text passes 4.5:1 on fill and grouped backgrounds. // HIG: accessibility */
+  --secondary-label: rgb(60 60 67 / 0.78);
   --tertiary-label: rgb(60 60 67 / 0.45);
   --quaternary-label: rgb(60 60 67 / 0.18);
   --placeholder-text: rgb(60 60 67 / 0.55);

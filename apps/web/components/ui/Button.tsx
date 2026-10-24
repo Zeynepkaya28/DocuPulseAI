@@ -24,7 +24,8 @@ const VARIANT: Record<ButtonVariant, string> = {
   prominent: "bg-accent-fill text-accent-on hover:brightness-110 active:brightness-95",
   bordered: "bg-fill-secondary text-label hover:bg-fill active:bg-fill",
   plain: "bg-transparent text-label hover:bg-fill-tertiary active:bg-fill-secondary",
-  destructive: "bg-fill-secondary text-fg-red hover:bg-fill",
+  // Red label on the plain background (≥4.5:1); a gray fill would drop it below 4.5:1. // HIG: accessibility
+  destructive: "bg-transparent text-fg-red border border-separator hover:bg-fill-tertiary",
 };
 
 const SIZE: Record<ButtonSize, string> = {

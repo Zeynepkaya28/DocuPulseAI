@@ -37,14 +37,15 @@ export function TabBar() {
               aria-label={badge ? `${s.tabLabel}, ${badge} başarısız işlem` : s.tabLabel}
               className={[
                 "relative flex-1 flex flex-col items-center justify-center min-h-[48px] rounded-full no-underline",
-                selected ? "bg-fill text-accent" : "text-label-secondary",
+                selected ? "bg-fill text-label" : "text-label-secondary",
               ].join(" ")}
             >
-              {/* Tab bar icons use the .fill variant. // HIG: tab-bars, sf-symbols */}
-              <Icon name={`${s.symbol}.fill`} scale="large" weight={selected ? "semibold" : "regular"} />
-              <span className="t-caption2">{s.tabLabel}</span>
+              {/* Tab bar icons use the .fill variant; the selected symbol carries the accent (≥3:1),
+                  its label stays in label color so small text keeps 4.5:1. // HIG: tab-bars, sf-symbols, accessibility */}
+              <Icon name={`${s.symbol}.fill`} scale="large" weight={selected ? "semibold" : "regular"} className={selected ? "text-fg-blue" : undefined} />
+              <span className={`t-caption2 ${selected ? "t-emphasized" : ""}`}>{s.tabLabel}</span>
               {badge > 0 && (
-                <span aria-hidden className="absolute top-0.5 right-[22%] min-w-[18px] h-[18px] px-1 rounded-full bg-red text-white t-caption2 grid place-items-center">
+                <span aria-hidden className="absolute top-0.5 right-[22%] min-w-[18px] h-[18px] px-1 rounded-full bg-red text-accent-on t-caption2 grid place-items-center">
                   {badge}
                 </span>
               )}
@@ -57,7 +58,7 @@ export function TabBar() {
           href={SEARCH.href}
           aria-current={onSearch ? "page" : undefined}
           aria-label={SEARCH.title}
-          className={`grid place-items-center w-[48px] h-[48px] rounded-full ${onSearch ? "bg-fill text-accent" : "text-label-secondary"}`}
+          className={`grid place-items-center w-[48px] h-[48px] rounded-full ${onSearch ? "bg-fill text-fg-blue" : "text-label-secondary"}`}
         >
           <Icon name={SEARCH.symbol} scale="large" weight={onSearch ? "semibold" : "regular"} />
         </Link>

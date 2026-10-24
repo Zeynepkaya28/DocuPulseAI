@@ -77,3 +77,10 @@ def test_openapi_schema_lists_routes(client):
     paths = client.get("/openapi.json").json()["paths"]
     for p in ("/documents/upload-url", "/documents/{doc_id}/complete", "/documents", "/graph"):
         assert p in paths
+
+
+def test_accepts_token_issued_slightly_in_the_future(client):
+    import time
+
+    future = make_token(iat=int(time.time()) + 5)
+    assert client.get("/me", headers={"Authorization": f"Bearer {future}"}).status_code == 200
