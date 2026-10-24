@@ -96,6 +96,16 @@ def test_idempotent_redelivery(uploaded_doc):
     assert rels_before == rels_after
 
 
+def test_graphrag_retrieval_finds_chain_and_hides_from_bob(uploaded_doc):
+    from app import rag
+
+    _drain()
+    ctx = rag.retrieve("Roket X kimin aracı?", ALICE)
+    assert ctx.passages
+    assert ctx.paths, "question entity 'Roket X' should yield relation chains"
+    assert rag.retrieve("Roket X kimin aracı?", BOB).empty
+
+
 def test_hybrid_search_respects_visibility(uploaded_doc):
     _drain()
     from app.llm import provider

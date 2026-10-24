@@ -1,0 +1,20 @@
+{"id": 1, "hops": 1, "question": "Roket X aracını hangi şirket geliştirdi?", "expected": ["Acme Uzay"]}
+{"id": 2, "hops": 1, "question": "Acme Uzay şirketinin genel müdürü kim?", "expected": ["Can Aksoy"]}
+{"id": 3, "hops": 1, "question": "Uydu Z hangi araçla fırlatıldı?", "expected": ["Roket X"]}
+{"id": 4, "hops": 1, "question": "Uydu Z güneş panellerini kim üretti?", "expected": ["Helios Enerji"]}
+{"id": 5, "hops": 1, "question": "Orbit Labs kurucusu kim?", "expected": ["Elif Kara"]}
+{"id": 6, "hops": 1, "question": "Turbo M motorunu hangi şirket üretti?", "expected": ["Delta Havacılık"]}
+{"id": 7, "hops": 1, "question": "Uydu Z kamerası hangi modeli kullanır?", "expected": ["Lens 7"]}
+{"id": 8, "hops": 1, "question": "Delta Havacılık araştırma direktörü kim?", "expected": ["Selin Öztürk"]}
+{"id": 9, "hops": 2, "question": "Uydu Z'yi fırlatan aracı hangi şirket geliştirdi?", "expected": ["Roket X", "Acme Uzay"]}
+{"id": 10, "hops": 2, "question": "Roket X'i geliştiren şirketin baş mühendisi kim?", "expected": ["Acme Uzay", "Ayşe Yılmaz"]}
+{"id": 11, "hops": 2, "question": "Uydu Z güneş panellerini üreten şirketin merkezi hangi şehirde?", "expected": ["Helios Enerji", "Bursa"]}
+{"id": 12, "hops": 2, "question": "Roket X'in birinci kademesindeki motoru hangi şirket üretti?", "expected": ["Turbo M", "Delta Havacılık"]}
+{"id": 13, "hops": 2, "question": "Uydu Z verilerinin iletildiği istasyon hangi eyalette?", "expected": ["Kennedy Üssü", "Florida"]}
+{"id": 14, "hops": 2, "question": "Acme Uzay genel müdürünün daha önce çalıştığı şirket hangi motoru üretti?", "expected": ["Delta Havacılık", "Turbo M"]}
+{"id": 15, "hops": 2, "question": "Uydu Z kamerasındaki modeli üreten firma kim?", "expected": ["Lens 7", "Optik Vizyon"]}
+{"id": 16, "hops": 2, "question": "Orbit Labs kurucusu daha önce hangi şirkette stajyerdi ve o şirket hangi aracı geliştirdi?", "expected": ["Acme Uzay", "Roket X"]}
+{"id": 17, "hops": 3, "question": "Uydu Z'yi fırlatan aracın motorunu üreten şirketin araştırma direktörü kim?", "expected": ["Roket X", "Turbo M", "Selin Öztürk"]}
+{"id": 18, "hops": 3, "question": "Uydu Z'yi fırlatan aracı geliştiren şirketin genel müdürü kim?", "expected": ["Roket X", "Acme Uzay", "Can Aksoy"]}
+{"id": 19, "hops": 2, "question": "Helios Enerji hangi şirketle tedarik anlaşması imzaladı?", "expected": ["Delta Havacılık"]}
+{"id": 20, "hops": 1, "question": "Acme Uzay hangi yıl kuruldu?", "expected": ["2009", "2011"], "conflict": true}

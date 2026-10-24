@@ -89,7 +89,7 @@ class OllamaProvider:
 
 
 _WORD = re.compile(r"\w+", re.UNICODE)
-_PROPER = re.compile(r"\b([A-ZÇĞİÖŞÜ][\wçğıöşü]+(?:\s+[A-ZÇĞİÖŞÜ][\wçğıöşü]+)*)")
+_PROPER = re.compile(r"\b([A-ZÇĞİÖŞÜ][\wçğıöşü]+(?:\s+(?:[A-ZÇĞİÖŞÜ][\wçğıöşü]*|\d+)\b)*)")
 
 
 class FakeProvider:

@@ -29,7 +29,8 @@ def driver() -> Driver:
     global _driver
     if _driver is None:
         s = get_settings()
-        _driver = GraphDatabase.driver(s.neo4j_uri, auth=(s.neo4j_user, s.neo4j_password), max_connection_pool_size=5)
+        _driver = GraphDatabase.driver(s.neo4j_uri, auth=(s.neo4j_user, s.neo4j_password), max_connection_pool_size=5,
+                                       notifications_min_severity="OFF")
     return _driver
 
 

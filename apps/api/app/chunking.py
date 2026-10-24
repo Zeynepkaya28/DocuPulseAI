@@ -25,8 +25,12 @@ class Meta:
     extra: dict = field(default_factory=dict)
 
 
-def split_text(text: str, page: int | None = None, max_chars: int = MAX_CHARS, overlap: int = OVERLAP) -> list[Piece]:
+def split_text(text: str, page: int | None = None, max_chars: int | None = None, overlap: int = OVERLAP) -> list[Piece]:
     """Paragraph-first packing; long paragraphs are cut on sentence boundaries with overlap."""
+    if max_chars is None:
+        from .config import get_settings
+
+        max_chars = get_settings().chunk_max_chars
     paras = [p.strip() for p in re.split(r"\n\s*\n", text) if p.strip()]
     pieces: list[Piece] = []
     buf = ""

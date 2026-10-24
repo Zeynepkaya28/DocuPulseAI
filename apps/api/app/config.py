@@ -30,6 +30,7 @@ class Settings(BaseSettings):
     embed_dim: int = 1536
 
     worker_secret: str = "dev-worker-secret"
+    chunk_max_chars: int = 1200
     worker_batch_size: int = 5
     worker_visibility_timeout: int = 240
     worker_max_attempts: int = 3
