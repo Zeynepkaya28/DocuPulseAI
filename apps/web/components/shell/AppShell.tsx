@@ -1,6 +1,9 @@
 "use client";
 import { Suspense, useEffect, type ReactNode } from "react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { EmptyState } from "@/components/ui/EmptyState";
+import { ProgressBar } from "@/components/ui/Progress";
+import { isSupabaseConfigured } from "@/lib/supabase";
 import { useIngestionStatus } from "@/hooks/useIngestionStatus";
 import { Api } from "@/lib/api";
 import { SECTIONS } from "@/lib/nav";
@@ -59,14 +62,41 @@ function LiveJobs({ children }: { children: ReactNode }) {
   return <JobsProvider jobs={jobs}>{children}</JobsProvider>;
 }
 
+/** Signed-out visitors go to /login and come back to the page they asked for. */
+function AuthGate({ children }: { children: ReactNode }) {
+  const { session, loading } = useSession();
+  const router = useRouter();
+  const pathname = usePathname();
+  const configured = isSupabaseConfigured();
+
+  useEffect(() => {
+    if (!loading && !session) router.replace(`/login?next=${encodeURIComponent(pathname)}`);
+  }, [loading, session, router, pathname]);
+
+  if (!configured) {
+    return (
+      <main className="min-h-dvh grid place-items-center">
+        <EmptyState symbol="exclamationmark.circle" title="Supabase yapılandırılmamış"
+          message="NEXT_PUBLIC_SUPABASE_URL ve NEXT_PUBLIC_SUPABASE_ANON_KEY değerlerini .env.local dosyasına ekleyin." />
+      </main>
+    );
+  }
+  if (loading || !session) {
+    return <div className="min-h-dvh grid place-items-center"><div className="w-48"><ProgressBar label="Oturum denetleniyor" /></div></div>;
+  }
+  return <>{children}</>;
+}
+
 export function AppShell({ children }: { children: ReactNode }) {
   return (
     <SessionProvider>
-      <ShellProvider>
-        <LiveJobs>
-          <ShellFrame>{children}</ShellFrame>
-        </LiveJobs>
-      </ShellProvider>
+      <AuthGate>
+        <ShellProvider>
+          <LiveJobs>
+            <ShellFrame>{children}</ShellFrame>
+          </LiveJobs>
+        </ShellProvider>
+      </AuthGate>
     </SessionProvider>
   );
 }

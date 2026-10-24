@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from .auth import User, current_user
 from .config import get_settings
-from .routers import chat, collections, documents, graph_routes, search, workers
+from .routers import account, chat, collections, documents, graph_routes, search, workers
 
 settings = get_settings()
 
@@ -27,6 +27,7 @@ app.include_router(collections.router)
 app.include_router(graph_routes.router)
 app.include_router(search.router)
 app.include_router(chat.router)
+app.include_router(account.router)
 app.include_router(workers.router)
 
 

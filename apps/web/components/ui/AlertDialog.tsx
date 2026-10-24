@@ -10,6 +10,7 @@ interface AlertDialogProps {
   confirmLabel: string;
   cancelLabel: string;
   destructive?: boolean;
+  confirmDisabled?: boolean;
   onConfirm: () => void;
   onCancel: () => void;
 }
@@ -18,7 +19,7 @@ interface AlertDialogProps {
  * Modal confirmation for hard-to-undo actions. Never auto-dismisses; the safe choice is the
  * default (focused, and what Escape does). // HIG: accessibility, materials (alerts use regular glass)
  */
-export function AlertDialog({ open, title, message, confirmLabel, cancelLabel, destructive, onConfirm, onCancel }: AlertDialogProps) {
+export function AlertDialog({ open, title, message, confirmLabel, cancelLabel, destructive, confirmDisabled, onConfirm, onCancel }: AlertDialogProps) {
   const ref = useRef<HTMLDialogElement>(null);
   const cancelRef = useRef<HTMLButtonElement>(null);
 
@@ -39,7 +40,7 @@ export function AlertDialog({ open, title, message, confirmLabel, cancelLabel, d
         onCancel();
       }}
       aria-labelledby="alert-title"
-      className="glass rounded-sheet p-0 w-[min(22rem,calc(100vw-2rem))] text-label backdrop:bg-[rgb(0_0_0/0.3)]"
+      className="glass m-auto rounded-sheet p-0 w-[min(22rem,calc(100vw-2rem))] text-label backdrop:bg-[var(--glass-dim)]"
     >
       <div className="p-5 space-y-2 text-center">
         <Text id="alert-title" variant="headline" as="h2">{title}</Text>
@@ -47,7 +48,7 @@ export function AlertDialog({ open, title, message, confirmLabel, cancelLabel, d
       </div>
       <div className="flex gap-2 p-3 pt-0">
         <Button ref={cancelRef} className="flex-1" onClick={onCancel}>{cancelLabel}</Button>
-        <Button variant={destructive ? "destructive" : "prominent"} className="flex-1" onClick={onConfirm}>
+        <Button variant={destructive ? "destructive" : "prominent"} className="flex-1" disabled={confirmDisabled} onClick={onConfirm}>
           {confirmLabel}
         </Button>
       </div>
