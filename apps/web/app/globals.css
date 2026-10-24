@@ -69,8 +69,30 @@
 
   /* Scroll edge effect instead of a solid bar behind controls. // HIG: layout, toolbars */
   .scroll-edge-top {
-    -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 var(--toolbar-height));
-    mask-image: linear-gradient(to bottom, transparent 0, #000 var(--toolbar-height));
+    isolation: isolate;
+  }
+  .scroll-edge-top::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 -20px 0;
+    z-index: -1;
+    pointer-events: none;
+    background: linear-gradient(to bottom, var(--scroll-edge-color, var(--system-background)) 35%, transparent);
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
+    -webkit-mask-image: linear-gradient(to bottom, #000 50%, transparent);
+    mask-image: linear-gradient(to bottom, #000 50%, transparent);
+  }
+  .scroll-edge-bottom {
+    isolation: isolate;
+  }
+  .scroll-edge-bottom::before {
+    content: "";
+    position: absolute;
+    inset: -24px 0 0 0;
+    z-index: -1;
+    pointer-events: none;
+    background: linear-gradient(to top, var(--scroll-edge-color, var(--system-background)) 45%, transparent);
   }
 
   .hit {

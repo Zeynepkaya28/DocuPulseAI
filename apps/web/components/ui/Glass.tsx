@@ -20,7 +20,15 @@ export interface GlassProps extends HTMLAttributes<HTMLElement> {
  */
 export function Glass({ as: Tag = "div", variant = "regular", dim, className = "", children, ...rest }: GlassProps) {
   return (
-    <Tag className={["glass relative isolate", variant === "clear" ? "glass-clear" : "", className].join(" ")} {...rest}>
+    <Tag
+      className={[
+        "glass isolate",
+        /(^|\s)(fixed|absolute|sticky)(\s|$)/.test(className) ? "" : "relative",
+        variant === "clear" ? "glass-clear" : "",
+        className,
+      ].join(" ")}
+      {...rest}
+    >
       {variant === "clear" && dim && (
         <span aria-hidden className="pointer-events-none absolute inset-0 -z-10 rounded-[inherit]" style={{ background: "var(--glass-dim)" }} />
       )}

@@ -69,7 +69,13 @@ const config: Config = {
       maxWidth: { readable: "var(--readable-width)" }, // HIG: layout "readable-width guides"
       width: { sidebar: "var(--sidebar-width)" },
       height: { toolbar: "var(--toolbar-height)", tabbar: "var(--tabbar-height)" },
-      spacing: { bezeled: "var(--space-bezeled)", borderless: "var(--space-borderless)" },
+      spacing: {
+        bezeled: "var(--space-bezeled)",
+        borderless: "var(--space-borderless)",
+        toolbar: "var(--toolbar-height)",
+        tabbar: "var(--tabbar-height)",
+        sidebar: "var(--sidebar-width)",
+      },
       transitionDuration: { fast: "var(--dur-fast)", DEFAULT: "var(--dur)" },
       transitionTimingFunction: { DEFAULT: "var(--ease)" },
       borderRadius: { control: "8px", card: "12px", sheet: "16px" },
