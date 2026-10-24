@@ -5,7 +5,7 @@ import {
   Filter, Folder, FolderPlus, GitBranch, HardDrive, Inbox, Info, Key, LayoutGrid, Lightbulb, List, Lock,
   LogOut, Mail, Map as MapIcon, Maximize2, MessagesSquare, Minus, Monitor, Moon, NotebookText, Package,
   PanelLeft, PanelRight, Palette, Plus, Quote, RotateCw, Search, Settings, Sheet, SquarePen, Sun,
-  Trash2, TriangleAlert, Undo2, Upload, User, Users, Waypoints, X, ZoomIn, ZoomOut, ArrowUp, Square,
+  Trash2, TriangleAlert, Undo2, Upload, User, Users, Waypoints, X, ZoomIn, ZoomOut, ArrowUp, Square, CircleStop,
   type LucideIcon,
 } from "lucide-react";
 
@@ -77,6 +77,7 @@ const GLYPHS: Record<string, LucideIcon> = {
   "minus.magnifyingglass": ZoomOut,
   scope: Crosshair,
   "square.and.pencil": SquarePen,
+  "stop.circle": CircleStop,
   "sun.max": Sun,
   moon: Moon,
   display: Monitor,
