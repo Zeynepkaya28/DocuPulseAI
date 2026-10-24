@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 import { Glass } from "@/components/ui/Glass";
 import { Icon } from "@/components/ui/Icon";
 import { Text } from "@/components/ui/Text";
+import { SearchField } from "@/components/search/SearchField";
 import { JobsIndicator } from "./JobsIndicator";
 import { useShell } from "./ShellContext";
 
@@ -67,7 +68,7 @@ export function Toolbar({ title, backHref, backLabel = "Geri", search, tools, pr
 
       {/* Group 2 — tools: search (regular), global jobs indicator (fixed slot), extras. */}
       <Glass className="flex items-center gap-0.5 rounded-full px-1 empty:hidden">
-        {isRegular && search}
+        {isRegular && (search === undefined ? <SearchField /> : search)}
         <JobsIndicator />
         {tools}
       </Glass>

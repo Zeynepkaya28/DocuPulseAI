@@ -77,15 +77,15 @@ export function UploadQueue({ queue }: { queue: Queue }) {
   });
 
   // Announce stage changes politely, once per change. // HIG: accessibility
+  const signature = JSON.stringify(rows.map((r) => [r.item.key, r.item.name, r.state.label]));
   useEffect(() => {
-    for (const { item, state } of rows) {
-      const msg = `${item.name}: ${state.label}`;
-      if (last.current.get(item.key) !== state.label) {
-        last.current.set(item.key, state.label);
-        setAnnounce(msg);
+    for (const [key, name, label] of JSON.parse(signature) as [string, string, string][]) {
+      if (last.current.get(key) !== label) {
+        last.current.set(key, label);
+        setAnnounce(`${name}: ${label}`);
       }
     }
-  });
+  }, [signature]);
 
   if (rows.length === 0) return <div aria-live="polite" className="sr-only">{announce}</div>;
 

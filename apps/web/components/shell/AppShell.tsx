@@ -2,6 +2,7 @@
 import { Suspense, useEffect, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
 import { useIngestionStatus } from "@/hooks/useIngestionStatus";
+import { Api } from "@/lib/api";
 import { SECTIONS } from "@/lib/nav";
 import { SessionProvider, useSession } from "@/lib/session";
 import { JobsProvider } from "./JobsContext";
@@ -42,7 +43,7 @@ function ShellFrame({ children }: { children: ReactNode }) {
           paddingBottom: isRegular ? 0 : "calc(var(--tabbar-height) + 24px + env(safe-area-inset-bottom))",
         }}
       >
-        {children}
+        <Suspense fallback={null}>{children}</Suspense>
       </div>
     </>
   );
@@ -51,6 +52,10 @@ function ShellFrame({ children }: { children: ReactNode }) {
 function LiveJobs({ children }: { children: ReactNode }) {
   const { userId } = useSession();
   const jobs = useIngestionStatus(userId);
+  const { setCollections } = useShell();
+  useEffect(() => {
+    if (userId) Api.collections().then(setCollections).catch(() => undefined);
+  }, [userId, setCollections]);
   return <JobsProvider jobs={jobs}>{children}</JobsProvider>;
 }
 

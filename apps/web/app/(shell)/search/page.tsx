@@ -1,13 +1,15 @@
 "use client";
 import { Toolbar } from "@/components/shell/Toolbar";
-import { EmptyState } from "@/components/ui/EmptyState";
+import { SearchField } from "@/components/search/SearchField";
 
-/** Compact-width Search tab. On regular widths search lives in the toolbar. // HIG: tab-bars "search tab" */
+/** Compact-width Search tab. On regular widths search lives in the toolbar. // HIG: tab-bars "search tab", search-fields */
 export default function SearchPage() {
   return (
     <>
-      <Toolbar title="Arama" />
-      <EmptyState symbol="magnifyingglass" title="Arama" message="Dokümanlarda, varlıklarda ve pasajlarda arayın." />
+      <Toolbar title="Arama" search={null} />
+      <div className="px-4 pb-4">
+        <SearchField variant="page" autoFocus />
+      </div>
     </>
   );
 }
