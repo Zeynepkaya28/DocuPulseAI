@@ -1,0 +1,263 @@
+{
+  "$comment": "Single source of truth for API and event shapes. Run `npm run gen -w packages/contracts` to regenerate TS + Pydantic.",
+  "unions": {
+    "ChatEvent": ["ChatStatusEvent", "ChatTokenEvent", "ChatSourcesEvent", "ChatDoneEvent", "ChatErrorEvent"]
+  },
+  "constants": {
+    "JOB_STAGES": ["Yükleniyor", "Parçalara bölünüyor", "Embedding", "Varlıklar çıkarılıyor", "Grafa yazılıyor"],
+    "QUEUES": ["document_ingest", "chunk_embed", "chunk_extract", "graph_write"],
+    "ACCEPTED_MIME": ["application/pdf", "text/markdown", "text/csv", "text/plain"],
+    "ACCEPTED_EXT": [".pdf", ".md", ".markdown", ".csv", ".txt"]
+  },
+  "definitions": {
+    "Role": { "enum": ["admin", "editor", "viewer"] },
+    "DocumentStatus": { "enum": ["pending", "uploaded", "processing", "ready", "failed", "canceled"] },
+    "JobStatus": { "enum": ["queued", "running", "done", "failed", "canceled"] },
+    "EntityType": { "enum": ["person", "organization", "concept", "product", "event", "document"] },
+    "SearchScope": { "enum": ["all", "documents", "entities", "passages"] },
+
+    "Document": {
+      "type": "object",
+      "required": ["id", "owner", "title", "mime", "status", "created_at"],
+      "properties": {
+        "id": { "type": "string" },
+        "owner": { "type": "string" },
+        "collection_id": { "type": "string", "nullable": true },
+        "title": { "type": "string" },
+        "author": { "type": "string", "nullable": true },
+        "published_at": { "type": "string", "nullable": true },
+        "mime": { "type": "string" },
+        "size_bytes": { "type": "integer", "nullable": true },
+        "storage_path": { "type": "string", "nullable": true },
+        "status": { "$ref": "DocumentStatus" },
+        "summary": { "type": "string", "nullable": true },
+        "entity_count": { "type": "integer" },
+        "created_at": { "type": "string" }
+      }
+    },
+    "Job": {
+      "type": "object",
+      "required": ["id", "document_id", "stage", "stage_name", "progress", "status", "updated_at"],
+      "properties": {
+        "id": { "type": "string" },
+        "document_id": { "type": "string" },
+        "stage": { "type": "integer", "$comment": "1 upload · 2 chunk · 3 embed · 4 extract · 5 graph" },
+        "stage_name": { "type": "string" },
+        "progress": { "type": "integer" },
+        "total": { "type": "integer", "nullable": true },
+        "status": { "$ref": "JobStatus" },
+        "error": { "type": "string", "nullable": true },
+        "updated_at": { "type": "string" }
+      }
+    },
+    "Collection": {
+      "type": "object",
+      "required": ["id", "name"],
+      "properties": { "id": { "type": "string" }, "name": { "type": "string" }, "owner": { "type": "string" } }
+    },
+
+    "UploadUrlRequest": {
+      "type": "object",
+      "required": ["filename", "mime", "size_bytes"],
+      "properties": {
+        "filename": { "type": "string" },
+        "mime": { "type": "string" },
+        "size_bytes": { "type": "integer" },
+        "collection_id": { "type": "string", "nullable": true }
+      }
+    },
+    "UploadUrlResponse": {
+      "type": "object",
+      "required": ["document_id", "bucket", "storage_path", "signed_url", "token"],
+      "properties": {
+        "document_id": { "type": "string" },
+        "bucket": { "type": "string" },
+        "storage_path": { "type": "string" },
+        "signed_url": { "type": "string" },
+        "token": { "type": "string" }
+      }
+    },
+
+    "DocumentUploadedEvent": {
+      "type": "object",
+      "required": ["document_id", "owner_id", "storage_path", "mime"],
+      "properties": {
+        "document_id": { "type": "string" },
+        "owner_id": { "type": "string" },
+        "storage_path": { "type": "string" },
+        "mime": { "type": "string" },
+        "page_from": { "type": "integer", "nullable": true },
+        "page_to": { "type": "integer", "nullable": true }
+      }
+    },
+    "ChunkBatchMessage": {
+      "type": "object",
+      "required": ["document_id", "chunk_ids"],
+      "properties": {
+        "document_id": { "type": "string" },
+        "chunk_ids": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "ExtractedEntity": {
+      "type": "object",
+      "required": ["name", "type"],
+      "properties": {
+        "name": { "type": "string" },
+        "type": { "$ref": "EntityType" },
+        "aliases": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "ExtractedRelation": {
+      "type": "object",
+      "required": ["source", "target", "type", "evidence_chunk_id"],
+      "properties": {
+        "source": { "type": "string" },
+        "target": { "type": "string" },
+        "type": { "type": "string" },
+        "evidence_chunk_id": { "type": "string" }
+      }
+    },
+    "GraphWriteMessage": {
+      "type": "object",
+      "required": ["document_id", "chunk_ids", "entities", "relations"],
+      "properties": {
+        "document_id": { "type": "string" },
+        "chunk_ids": { "type": "array", "items": { "type": "string" } },
+        "entities": { "type": "array", "items": { "$ref": "ExtractedEntity" } },
+        "relations": { "type": "array", "items": { "$ref": "ExtractedRelation" } }
+      }
+    },
+
+    "Passage": {
+      "type": "object",
+      "required": ["chunk_id", "document_id", "document_title", "snippet", "score"],
+      "properties": {
+        "chunk_id": { "type": "string" },
+        "document_id": { "type": "string" },
+        "document_title": { "type": "string" },
+        "page": { "type": "integer", "nullable": true },
+        "snippet": { "type": "string" },
+        "score": { "type": "number" }
+      }
+    },
+    "PathEdge": {
+      "type": "object",
+      "required": ["source", "target", "type"],
+      "properties": {
+        "source": { "type": "string" },
+        "target": { "type": "string" },
+        "type": { "type": "string" },
+        "document_id": { "type": "string", "nullable": true },
+        "chunk_id": { "type": "string", "nullable": true }
+      }
+    },
+    "RelationPath": {
+      "type": "object",
+      "required": ["nodes", "edges"],
+      "properties": {
+        "nodes": { "type": "array", "items": { "$ref": "GraphNode" } },
+        "edges": { "type": "array", "items": { "$ref": "PathEdge" } }
+      }
+    },
+    "Conflict": {
+      "type": "object",
+      "required": ["subject", "relation", "values"],
+      "properties": {
+        "subject": { "type": "string" },
+        "relation": { "type": "string" },
+        "values": { "type": "array", "items": { "type": "string" } },
+        "document_ids": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+
+    "ChatRequest": {
+      "type": "object",
+      "required": ["question"],
+      "properties": {
+        "question": { "type": "string" },
+        "session_id": { "type": "string", "nullable": true },
+        "collection_id": { "type": "string", "nullable": true }
+      }
+    },
+    "ChatStatusEvent": {
+      "type": "object",
+      "required": ["type", "stage"],
+      "properties": {
+        "type": { "const": "status" },
+        "stage": { "enum": ["searching_graph", "searching_passages", "writing"] },
+        "session_id": { "type": "string", "nullable": true }
+      }
+    },
+    "ChatTokenEvent": {
+      "type": "object",
+      "required": ["type", "text"],
+      "properties": { "type": { "const": "token" }, "text": { "type": "string" } }
+    },
+    "ChatSourcesEvent": {
+      "type": "object",
+      "required": ["type", "passages", "paths", "conflicts"],
+      "properties": {
+        "type": { "const": "sources" },
+        "passages": { "type": "array", "items": { "$ref": "Passage" } },
+        "paths": { "type": "array", "items": { "$ref": "RelationPath" } },
+        "conflicts": { "type": "array", "items": { "$ref": "Conflict" } }
+      }
+    },
+    "ChatDoneEvent": {
+      "type": "object",
+      "required": ["type", "message_id"],
+      "properties": { "type": { "const": "done" }, "message_id": { "type": "string" } }
+    },
+    "ChatErrorEvent": {
+      "type": "object",
+      "required": ["type", "message"],
+      "properties": { "type": { "const": "error" }, "message": { "type": "string" } }
+    },
+
+    "GraphNode": {
+      "type": "object",
+      "required": ["id", "name", "type"],
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "type": { "$ref": "EntityType" },
+        "degree": { "type": "integer" },
+        "document_ids": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "GraphEdge": {
+      "type": "object",
+      "required": ["id", "source", "target", "type"],
+      "properties": {
+        "id": { "type": "string" },
+        "source": { "type": "string" },
+        "target": { "type": "string" },
+        "type": { "type": "string" },
+        "conflict": { "type": "boolean" },
+        "document_id": { "type": "string", "nullable": true }
+      }
+    },
+    "GraphResponse": {
+      "type": "object",
+      "required": ["nodes", "edges"],
+      "properties": {
+        "nodes": { "type": "array", "items": { "$ref": "GraphNode" } },
+        "edges": { "type": "array", "items": { "$ref": "GraphEdge" } },
+        "truncated": { "type": "boolean" }
+      }
+    },
+
+    "SearchHit": {
+      "type": "object",
+      "required": ["kind", "id", "title", "score"],
+      "properties": {
+        "kind": { "enum": ["document", "entity", "passage"] },
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "subtitle": { "type": "string", "nullable": true },
+        "document_id": { "type": "string", "nullable": true },
+        "score": { "type": "number" }
+      }
+    }
+  }
+}

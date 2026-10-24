@@ -1,0 +1,12 @@
+{
+  "name": "@docupulse/contracts",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "ts/index.ts",
+  "types": "ts/index.ts",
+  "scripts": {
+    "gen": "node scripts/generate.mjs",
+    "check": "node scripts/generate.mjs --check"
+  }
+}
