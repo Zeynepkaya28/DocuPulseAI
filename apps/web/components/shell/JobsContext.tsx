@@ -12,6 +12,7 @@ export interface JobView {
   total: number | null;
   status: "queued" | "running" | "done" | "failed" | "canceled";
   error?: string | null;
+  updatedAt?: string;
 }
 
 interface JobsState {

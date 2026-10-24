@@ -3,6 +3,7 @@ import { Icon } from "@/components/ui/Icon";
 import { Popover } from "@/components/ui/Popover";
 import { ProgressBar, ProgressCircle } from "@/components/ui/Progress";
 import { Text } from "@/components/ui/Text";
+import { overallProgress } from "@/hooks/useIngestionStatus";
 import { useJobs } from "./JobsContext";
 
 /**
@@ -13,7 +14,8 @@ export function JobsIndicator() {
   const { jobs, activeCount } = useJobs();
   const active = jobs.filter((j) => j.status === "queued" || j.status === "running");
   if (activeCount === 0) return null;
-  const overall = active.reduce((sum, j) => sum + (j.stage - 1 + (j.total ? j.progress / j.total : 0)) / 5, 0) / active.length;
+  const known = active.map(overallProgress).filter((v): v is number => v !== null);
+  const overall = known.length ? known.reduce((a, b) => a + b, 0) / known.length : null;
 
   return (
     <Popover
@@ -31,7 +33,7 @@ export function JobsIndicator() {
         {active.map((j) => (
           <li key={j.id} className="px-2 py-2 space-y-1">
             <Text variant="body" truncate as="p">{j.title}</Text>
-            <ProgressBar value={j.total ? (j.stage - 1 + j.progress / j.total) / 5 : null} label={`${j.title} ilerlemesi`} />
+            <ProgressBar value={overallProgress(j)} label={`${j.title} ilerlemesi`} />
             <Text variant="footnote" color="secondary" as="p" className="inline-flex items-center gap-1">
               <Icon name="arrow.clockwise" scale="small" className="text-status-processing" />
               {j.stageName} · {j.stage}/5

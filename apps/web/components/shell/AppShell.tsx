@@ -1,8 +1,10 @@
 "use client";
 import { Suspense, useEffect, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
+import { useIngestionStatus } from "@/hooks/useIngestionStatus";
 import { SECTIONS } from "@/lib/nav";
-import { JobsProvider, type JobView } from "./JobsContext";
+import { SessionProvider, useSession } from "@/lib/session";
+import { JobsProvider } from "./JobsContext";
 import { ShellProvider, useShell } from "./ShellContext";
 import { Sidebar } from "./Sidebar";
 import { TabBar } from "./TabBar";
@@ -46,12 +48,20 @@ function ShellFrame({ children }: { children: ReactNode }) {
   );
 }
 
-export function AppShell({ children, jobs = [] }: { children: ReactNode; jobs?: JobView[] }) {
+function LiveJobs({ children }: { children: ReactNode }) {
+  const { userId } = useSession();
+  const jobs = useIngestionStatus(userId);
+  return <JobsProvider jobs={jobs}>{children}</JobsProvider>;
+}
+
+export function AppShell({ children }: { children: ReactNode }) {
   return (
-    <ShellProvider>
-      <JobsProvider jobs={jobs}>
-        <ShellFrame>{children}</ShellFrame>
-      </JobsProvider>
-    </ShellProvider>
+    <SessionProvider>
+      <ShellProvider>
+        <LiveJobs>
+          <ShellFrame>{children}</ShellFrame>
+        </LiveJobs>
+      </ShellProvider>
+    </SessionProvider>
   );
 }
